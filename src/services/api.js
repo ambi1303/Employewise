@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_BASE_URL = "https://reqres.in/api";
+const API_BASE_URL = 'https://reqres.in';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-export default api;
+export const loginUser = async (credentials) => {
+  // POST the credentials to the API endpoint
+  const response = await axios.post(`${API_BASE_URL}/api/login`, credentials);
+  // Assuming the token is returned as response.data.token
+  return response.data.token;
+};

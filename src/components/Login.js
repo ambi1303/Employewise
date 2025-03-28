@@ -1,51 +1,68 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/api';
 
 const Login = () => {
-  const [email, setEmail] = useState("eve.holt@reqres.in");
-  const [password, setPassword] = useState("cityslicka");
-  const [error, setError] = useState("");
+  // Prefill with the required credentials
+  const [email, setEmail] = useState('eve.holt@reqres.in');
+  const [password, setPassword] = useState('cityslicka');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+
+    // Validate that both fields are filled (they should already be prefilled)
+    if (!email || !password) {
+      setError('Both email and password are required.');
+      return;
+    }
+    
+    // Ensure the user is using the specific credentials (optional, since fields are prefilled)
+    if (email !== 'eve.holt@reqres.in' || password !== 'cityslicka') {
+      setError('Please use the provided credentials.');
+      return;
+    }
+    
     try {
-      const response = await api.post("/login", { email, password });
-      localStorage.setItem("token", response.data.token);
-      navigate("/users");
+      // Call the API with the hardcoded credentials
+      const token = await loginUser({ email, password });
+      if (token) {
+        // Store the token in localStorage
+        localStorage.setItem('token', token);
+        // Navigate to the Users List page
+        navigate('/users');
+      } else {
+        setError('Login failed, token not received.');
+      }
     } catch (err) {
-      setError("Invalid credentials!");
+      setError('Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <div className="p-8 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border mb-2"
-            placeholder="Email"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border mb-2"
-            placeholder="Password"
-          />
-          <button type="submit" className="w-full bg-blue-500 text-white p-2">
-            Login
-          </button>
-        </form>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Email:</label>
+        <input 
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
       </div>
-    </div>
+      <div>
+        <label>Password:</label>
+        <input 
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+      </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type="submit">Login</button>
+    </form>
   );
 };
 

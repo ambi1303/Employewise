@@ -1,18 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import UserList from "./components/UserList";
-import EditUser from "./components/EditUser";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import UserPage from './pages/UserPage';
 
-const App = () => {
+function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/users" element={<UserList />} />
-        <Route path="/edit/:id" element={<EditUser />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/users" element={<UserPage />} />
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;
