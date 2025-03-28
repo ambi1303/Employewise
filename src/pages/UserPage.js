@@ -3,7 +3,7 @@ import UserList from '../components/UserList';
 
 const UserPage = () => {
   return (
-    <div>
+    <div className="user-page">
       <h1>User List Page</h1>
       <UserList />
     </div>

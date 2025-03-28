@@ -6,10 +6,12 @@ import UserPage from './pages/UserPage';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/users" element={<UserPage />} />
-      </Routes>
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/users" element={<UserPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

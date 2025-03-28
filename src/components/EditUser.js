@@ -10,12 +10,9 @@ const EditUser = ({ user, onClose, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Call PUT /api/users/{id} with updated data
       await updateUser(user.id, { first_name: firstName, last_name: lastName, email });
       setMessage('User updated successfully.');
-      // Propagate the updated data to the parent component
       onUpdate(user.id, { ...user, first_name: firstName, last_name: lastName, email });
-      // Optionally, close the edit form
       onClose();
     } catch (error) {
       setMessage('Update failed. Please try again.');
@@ -23,9 +20,9 @@ const EditUser = ({ user, onClose, onUpdate }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ border: '1px solid #ddd', padding: '1rem', marginTop: '1rem' }}>
+    <form onSubmit={handleSubmit} className="edit-form">
       <h3>Edit User</h3>
-      <div>
+      <div className="form-group">
         <label>First Name:</label>
         <input 
           type="text" 
@@ -33,7 +30,7 @@ const EditUser = ({ user, onClose, onUpdate }) => {
           onChange={(e) => setFirstName(e.target.value)}
         />
       </div>
-      <div>
+      <div className="form-group">
         <label>Last Name:</label>
         <input 
           type="text" 
@@ -41,7 +38,7 @@ const EditUser = ({ user, onClose, onUpdate }) => {
           onChange={(e) => setLastName(e.target.value)}
         />
       </div>
-      <div>
+      <div className="form-group">
         <label>Email:</label>
         <input 
           type="email" 
@@ -50,8 +47,8 @@ const EditUser = ({ user, onClose, onUpdate }) => {
         />
       </div>
       <button type="submit">Update</button>
-      <button type="button" onClick={onClose} style={{ marginLeft: '0.5rem' }}>Cancel</button>
-      {message && <p>{message}</p>}
+      <button type="button" onClick={onClose}>Cancel</button>
+      {message && <p className={message.includes('successfully') ? 'success' : 'error'}>{message}</p>}
     </form>
   );
 };

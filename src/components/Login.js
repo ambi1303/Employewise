@@ -12,25 +12,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate that both fields are filled (they should already be prefilled)
+    // Validate inputs
     if (!email || !password) {
       setError('Both email and password are required.');
       return;
     }
     
-    // Ensure the user is using the specific credentials (optional, since fields are prefilled)
+    // Ensure correct credentials are used
     if (email !== 'eve.holt@reqres.in' || password !== 'cityslicka') {
       setError('Please use the provided credentials.');
       return;
     }
     
     try {
-      // Call the API with the hardcoded credentials
       const token = await loginUser({ email, password });
       if (token) {
-        // Store the token in localStorage
         localStorage.setItem('token', token);
-        // Navigate to the Users List page
         navigate('/users');
       } else {
         setError('Login failed, token not received.');
@@ -42,7 +39,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className="form-group">
         <label>Email:</label>
         <input 
           type="email"
@@ -51,7 +48,7 @@ const Login = () => {
           placeholder="Email"
         />
       </div>
-      <div>
+      <div className="form-group">
         <label>Password:</label>
         <input 
           type="password"
@@ -60,7 +57,7 @@ const Login = () => {
           placeholder="Password"
         />
       </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       <button type="submit">Login</button>
     </form>
   );
