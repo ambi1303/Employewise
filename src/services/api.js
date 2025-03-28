@@ -8,8 +8,20 @@ export const loginUser = async (credentials) => {
   return response.data.token;
 };
 
-// New function: Fetch users for a given page
+// Fetch users API
 export const getUsers = async (page = 1) => {
   const response = await axios.get(`${API_BASE_URL}/api/users?page=${page}`);
-  return response.data; // Contains { page, per_page, total, total_pages, data }
+  return response.data; // returns { page, per_page, total, total_pages, data }
+};
+
+// Update user API: PUT /api/users/{id}
+export const updateUser = async (id, updatedData) => {
+  const response = await axios.put(`${API_BASE_URL}/api/users/${id}`, updatedData);
+  return response.data;
+};
+
+// Delete user API: DELETE /api/users/{id}
+export const deleteUser = async (id) => {
+  const response = await axios.delete(`${API_BASE_URL}/api/users/${id}`);
+  return response.data; // usually returns an empty object on success
 };

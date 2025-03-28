@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getUsers } from '../services/api';
+import { getUsers, deleteUser } from '../services/api';
+import EditUser from './EditUser';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState('');
+  const [editingUserId, setEditingUserId] = useState(null);
 
-  // Fetch users whenever the page number changes
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -18,17 +19,31 @@ const UserList = () => {
         setError('Failed to fetch users.');
       }
     };
-
     fetchUsers();
   }, [page]);
 
-  // Handlers for pagination
   const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
   };
 
   const handleNext = () => {
     if (page < totalPages) setPage(page + 1);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id);
+      // Remove the deleted user from the list
+      setUsers(users.filter(user => user.id !== id));
+      alert('User deleted successfully.');
+    } catch (err) {
+      alert('Failed to delete user.');
+    }
+  };
+
+  const handleUpdateUser = (id, updatedUser) => {
+    // Update the user list with the modified user data
+    setUsers(users.map(user => (user.id === id ? updatedUser : user)));
   };
 
   return (
@@ -44,18 +59,25 @@ const UserList = () => {
               width: '200px',
               textAlign: 'center'
             }}>
-            <img src={user.avatar} alt={`${user.first_name} ${user.last_name}`} style={{ borderRadius: '50%', width: '100px', height: '100px' }} />
+            <img src={user.avatar} alt={`${user.first_name} ${user.last_name}`} 
+                 style={{ borderRadius: '50%', width: '100px', height: '100px' }} />
             <h3>{user.first_name} {user.last_name}</h3>
+            <p>{user.email}</p>
+            <button onClick={() => setEditingUserId(user.id)}>Edit</button>
+            <button onClick={() => handleDelete(user.id)} style={{ marginLeft: '0.5rem' }}>Delete</button>
+            {editingUserId === user.id && (
+              <EditUser 
+                user={user} 
+                onClose={() => setEditingUserId(null)}
+                onUpdate={handleUpdateUser}
+              />
+            )}
           </div>
         ))}
       </div>
       <div style={{ marginTop: '1rem' }}>
-        <button onClick={handlePrevious} disabled={page === 1}>
-          Previous
-        </button>
-        <button onClick={handleNext} disabled={page === totalPages} style={{ marginLeft: '1rem' }}>
-          Next
-        </button>
+        <button onClick={handlePrevious} disabled={page === 1}>Previous</button>
+        <button onClick={handleNext} disabled={page === totalPages} style={{ marginLeft: '1rem' }}>Next</button>
       </div>
     </div>
   );
