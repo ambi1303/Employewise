@@ -1,10 +1,11 @@
 import React from 'react';
+import UserList from '../components/UserList';
 
 const UserPage = () => {
   return (
     <div>
-      <h1>User List</h1>
-      <p>This is where the user list will be displayed.</p>
+      <h1>User List Page</h1>
+      <UserList />
     </div>
   );
 };
